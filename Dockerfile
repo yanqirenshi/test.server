@@ -66,7 +66,7 @@ RUN ros install clack
 USER appl-user
 WORKDIR /home/appl-user
 
-RUN mkdir -p /home/appl-user/prj/test.server
+RUN mkdir -p /home/appl-user/prj/test.server/src
 
 COPY ./test.server.asd  /home/appl-user/prj/test.server/test.server.asd
 COPY ./src  /home/appl-user/prj/test.server/src
