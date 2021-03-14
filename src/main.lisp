@@ -6,15 +6,9 @@
 (defun ensure-address (address)
   (or address "0.0.0.0"))
 
-(defun basic-auth (user pass)
-  (and (string= user "hoge")
-       (string= pass "fuga")))
-
 (defun start-server ()
   (setf *svr*
-        (clack:clackup (lack:builder :session
-                                     (:auth-basic :authenticator #'basic-auth)
-                                     (:static :path "/public/" :root #P"/static-files/")
+        (clack:clackup (lack:builder (:static :path "/public/" :root #P"/static-files/")
                                      *router*)
                        :server  :hunchentoot
                        :port    (ensure-port    (uiop:getenv "PORT"))

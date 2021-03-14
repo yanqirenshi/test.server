@@ -1,6 +1,0 @@
-service: default
-runtime: custom
-env: flex
-network:
-  forwarded_ports:
-    - 8080/tcp
