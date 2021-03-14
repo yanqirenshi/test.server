@@ -26,7 +26,10 @@ exec ros -Q -- $0 "$@"
   (setf *svr*
         (clack:clackup (lack:builder (:static :path "/files/"
                                               :root #P"/home/appl-user/prj/test-server/files/")
-                                     test.server:*router*)
+                                     ;; test.server:*router*
+                                     (lambda (env)
+                                       (declare (ignore env))
+                                       '(200 (:content-type "text/plain") ("Hello, Clack!"))))
                        :server  :hunchentoot
                        :port    (parse-integer (or (uiop:getenv "PORT") "8080"))
                        :address "0.0.0.0")))
