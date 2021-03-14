@@ -25,17 +25,30 @@ exec ros -Q -- $0 "$@"
 (ql:quickload :woo)
 (ql:quickload :clack)
 
+(defvar *svr* nil)
+(defvar *balus* nil)
+
 (defun start ()
-  (woo:run
-   (lambda (env)
-     (declare (ignore env))
-     '(200 (:content-type "text/plain") ("Hello, World")))
-   :port (parse-integer (or (uiop:getenv "PORT")
-                            "8080"))
-   :address "0.0.0.0"))
+  (setf *svr*
+        (clack:clackup (lack:builder (lambda (env)
+                                       (declare (ignore env))
+                                       '(200 (:content-type "text/plain") ("Hello, Clack!"))))
+                       :server  :woo
+                       :port    (parse-integer (or (uiop:getenv "PORT") "8080"))
+                       :address "0.0.0.0")))
+
+(defun gc-loop ()
+  (do ((counter 0 (1+ counter))
+       (gc-point 88888888))
+      (*balus* (clack:stop *svr*))
+    (sleep 1)
+    (when (= counter gc-point)
+      (setf counter 0)
+      (sb-ext:gc))))
 
 (defun main (&rest argv)
   (declare (ignorable argv))
-  (start))
+  (start)
+  (gc-loop))
 
 ;;; vim: set ft=lisp lisp:
