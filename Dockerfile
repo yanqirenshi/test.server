@@ -68,8 +68,21 @@ WORKDIR /home/appl-user
 
 RUN mkdir -p /home/appl-user/prj/test-server
 
+COPY ./test.server.asd /home/appl-user/prj/test.server/test.server.asd
 COPY ./test-server.ros /home/appl-user/prj/test-server/test-server.ros
+COPY ./src   /home/appl-user/prj/test.server/src
 COPY ./files /home/appl-user/prj/test-server/files
+
+
+##### ################################################################
+#####   setting asdf
+##### ################################################################
+USER appl-user
+WORKDIR /home/appl-user
+
+RUN mkdir -p /home/appl-user/.asdf
+
+RUN ln -s /home/appl-user/prj/test.server/test.server.asd /home/appl-user/.asdf/test.server.asd
 
 
 ##### ################################################################

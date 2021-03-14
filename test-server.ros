@@ -12,37 +12,29 @@ exec ros -Q -- $0 "$@"
   (:use :cl))
 (in-package :ros.script.gcp-sbcl-woo.3799527630)
 
-
-;; SBCL
 (setf sb-impl::*default-external-format* :utf-8)
 (setf sb-alien::*default-c-string-external-format* :utf-8)
 
-
-;; ASDF
 (push #P"~/.asdf/" asdf:*central-registry*)
 
-
-(ql:quickload :woo)
 (ql:quickload :clack)
+(ql:quickload :test.server)
 
 (defvar *svr* nil)
-(defvar *balus* nil)
 
 (defun start ()
   (setf *svr*
         (clack:clackup (lack:builder (:static :path "/files/"
                                               :root #P"/home/appl-user/prj/test-server/files/")
-                                     (lambda (env)
-                                       (declare (ignore env))
-                                       '(200 (:content-type "text/plain") ("Hello, Clack!!"))))
-                       :server  :woo
+                                     test.server:*router*)
+                       :server  :hunchentoot
                        :port    (parse-integer (or (uiop:getenv "PORT") "8080"))
                        :address "0.0.0.0")))
 
 (defun gc-loop ()
   (do ((counter 0 (1+ counter))
        (gc-point 88888888))
-      (*balus* (clack:stop *svr*))
+      (test.server:*balus* (clack:stop *svr*))
     (sleep 1)
     (when (= counter gc-point)
       (setf counter 0)
