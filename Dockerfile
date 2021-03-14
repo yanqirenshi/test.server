@@ -6,9 +6,9 @@
 #####
 #####    Run
 #####    ---
-#####      docker run  -it gcp.sbcl.woo
-#####      docker run  -d  gcp.sbcl.woo
-#####      docker exec -it {id} /bin/bash
+#####      docker run  -p 8080:8080 -it gcp.sbcl.woo
+#####      docker run  -p 8080:8080 -d  gcp.sbcl.woo
+#####      docker exec -p 8080:8080 -it {id} /bin/bash
 #####
 ##### ################################################################
 FROM ubuntu:18.04
