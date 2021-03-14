@@ -2,12 +2,12 @@
 #####
 #####    Build
 #####    -----
-#####      docker build -t gcp.sbcl.woo -f Dockerfile .
+#####      docker build -t test-server -f Dockerfile .
 #####
 #####    Run
 #####    ---
-#####      docker run  -p 8080:8080 -it gcp.sbcl.woo
-#####      docker run  -p 8080:8080 -d  gcp.sbcl.woo
+#####      docker run  -p 8080:8080 -it test-server
+#####      docker run  -p 8080:8080 -d  test-server
 #####      docker exec -p 8080:8080 -it {id} /bin/bash
 #####
 ##### ################################################################
@@ -61,31 +61,32 @@ RUN ros install woo
 
 
 ##### ################################################################
-#####   setting gcp.sbcl.woo
+#####   setting test-server
 ##### ################################################################
 USER appl-user
 WORKDIR /home/appl-user
 
-RUN mkdir -p /home/appl-user/prj/gcp.sbcl.woo
+RUN mkdir -p /home/appl-user/prj/test-server
 
-COPY ./test-server.ros /home/appl-user/prj/gcp.sbcl.woo/test-server.ros
+COPY ./test-server.ros /home/appl-user/prj/test-server/test-server.ros
+COPY ./files /home/appl-user/prj/test-server/files
 
 
 ##### ################################################################
 #####   build ros
 ##### ################################################################
 USER appl-user
-WORKDIR /home/appl-user/prj/gcp.sbcl.woo
+WORKDIR /home/appl-user/prj/test-server
 
 RUN ros build test-server.ros
 
 
 ##### ################################################################
-#####   gcp.sbcl.woo
+#####   test-server
 ##### ################################################################
 USER appl-user
 WORKDIR /home/appl-user/tmp
 
 EXPOSE 8080
 
-CMD ["/home/appl-user/prj/gcp.sbcl.woo/test-server"]
+CMD ["/home/appl-user/prj/test-server/test-server"]
