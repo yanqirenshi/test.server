@@ -68,7 +68,7 @@ WORKDIR /home/appl-user
 
 RUN mkdir -p /home/appl-user/prj/gcp.sbcl.woo
 
-COPY ./gcp-sbcl-woo.ros /home/appl-user/prj/gcp.sbcl.woo/gcp-sbcl-woo.ros
+COPY ./test-server.ros /home/appl-user/prj/gcp.sbcl.woo/test-server.ros
 
 
 ##### ################################################################
@@ -77,7 +77,7 @@ COPY ./gcp-sbcl-woo.ros /home/appl-user/prj/gcp.sbcl.woo/gcp-sbcl-woo.ros
 USER appl-user
 WORKDIR /home/appl-user/prj/gcp.sbcl.woo
 
-RUN ros build gcp-sbcl-woo.ros
+RUN ros build test-server.ros
 
 
 ##### ################################################################
@@ -88,4 +88,4 @@ WORKDIR /home/appl-user/tmp
 
 EXPOSE 8080
 
-CMD ["/home/appl-user/prj/gcp.sbcl.woo/gcp-sbcl-woo"]
+CMD ["/home/appl-user/prj/gcp.sbcl.woo/test-server"]
