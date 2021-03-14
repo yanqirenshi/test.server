@@ -1,6 +1,6 @@
 steps:
 
-  - name: 'gcr.io/cloud-builders/gcloud'
-    args: ['app', 'deploy', 'app.yaml']
+  - name: 'gcr.io/cloud-builders/docker'
+    args: [ 'build', '-t', 'gcr.io/test-server-307605/test.server', '.' ]
 
 timeout: 10m
