@@ -9,3 +9,5 @@ steps:
     args: ['run', 'deploy', 'test-server', '--image', 'gcr.io/test-server-307605/test.server', '--region', 'asia-northeast1', '--platform', 'managed', '--allow-unauthenticated']
 
 images: ['gcr.io/test-server-307605/test.server']
+
+timeout: 20m
