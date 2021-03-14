@@ -17,6 +17,7 @@ exec ros -Q -- $0 "$@"
 
 (push #P"~/.asdf/" asdf:*central-registry*)
 
+(ql:quickload :woo)
 (ql:quickload :clack)
 (ql:quickload :test.server)
 
@@ -32,7 +33,7 @@ exec ros -Q -- $0 "$@"
                                        (declare (ignore env))
                                        '(200 (:content-type "text/plain")
                                          ("Hello, Clack!"))))
-                       :server  :hunchentoot
+                       :server  :woo ;; :hunchentoot
                        :port    (parse-integer (or (uiop:getenv "PORT") "8080"))
                        :address "0.0.0.0")))
 
