@@ -4,4 +4,4 @@ steps:
     dir: 'src'
     args: ['app', 'deploy', 'app.yaml']
 
-timeout: 20m
+timeout: 10m
