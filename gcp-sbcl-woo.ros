@@ -1,0 +1,38 @@
+#!/bin/sh
+#|-*- mode:lisp -*-|#
+#|
+exec ros -Q -- $0 "$@"
+|#
+(progn ;;init forms
+  (ros:ensure-asdf)
+  #+quicklisp(ql:quickload '() :silent t)
+  )
+
+(defpackage :ros.script.gcp-sbcl-woo.3799527630
+  (:use :cl))
+(in-package :ros.script.gcp-sbcl-woo.3799527630)
+
+
+;; SBCL
+(setf sb-impl::*default-external-format* :utf-8)
+(setf sb-alien::*default-c-string-external-format* :utf-8)
+
+
+;; ASDF
+(push #P"~/.asdf/" asdf:*central-registry*)
+
+
+(ql:quickload :woo)
+
+
+(defun main (&rest argv)
+  (declare (ignorable argv))
+  (woo:run
+   (lambda (env)
+     (declare (ignore env))
+     '(200 (:content-type "text/plain") ("Hello, World")))
+   :port (parse-integer (or (uiop:getenv "PORT")
+                            "8080"))
+   :address "0.0.0.0"))
+
+;;; vim: set ft=lisp lisp:

@@ -2,13 +2,13 @@
 #####
 #####    Build
 #####    -----
-#####      docker build -t gcp.sbcl.woo -f Dockerfile .
+#####      docker build -t test.server -f Dockerfile .
 #####
 #####    Run
 #####    ---
-#####      docker run  -it gcp.sbcl.woo
-#####      docker run  -d  gcp.sbcl.woo
-#####      docker exec -it {id} /bin/bash
+#####      docker run  -p 8080:8080 -it test.server
+#####      docker run  -p 8080:8080 -d  test.server
+#####      docker exec -p 8080:8080 -it {id} /bin/bash
 #####
 ##### ################################################################
 FROM ubuntu:18.04
@@ -24,7 +24,7 @@ USER root
 RUN apt -y update
 RUN apt -y upgrade
 
-RUN apt -y install sudo curl wget git libev-dev
+RUN apt -y install sudo curl wget git libev-dev unzip
 
 
 ##### ################################################################
@@ -58,34 +58,43 @@ WORKDIR /home/appl-user
 RUN ros setup
 
 RUN ros install woo
-
+RUN ros install clack
 
 ##### ################################################################
-#####   setting gcp.sbcl.woo
+#####   setting test.server
 ##### ################################################################
 USER appl-user
 WORKDIR /home/appl-user
 
-RUN mkdir -p /home/appl-user/prj/gcp.sbcl.woo
+RUN mkdir -p /home/appl-user/prj/test.server/src
 
-COPY ./gcp-sbcl-woo.ros /home/appl-user/prj/gcp.sbcl.woo/gcp-sbcl-woo.ros
-
+COPY ./test.server.asd  /home/appl-user/prj/test.server/test.server.asd
+COPY ./src  /home/appl-user/prj/test.server/src
 
 ##### ################################################################
-#####   build
+#####   setting asdf
 ##### ################################################################
 USER appl-user
-WORKDIR /home/appl-user/prj/gcp.sbcl.woo
+WORKDIR /home/appl-user
 
-RUN ros build gcp-sbcl-woo.ros
+RUN mkdir -p /home/appl-user/.asdf
 
+RUN ln -s /home/appl-user/prj/test.server/test.server.asd /home/appl-user/.asdf/test.server.asd
 
 ##### ################################################################
-#####   gcp.sbcl.woo
+#####   build exec
+##### ################################################################
+USER appl-user
+WORKDIR /home/appl-user/prj/test.server/src
+
+RUN ros build main.ros
+
+##### ################################################################
+#####   test.server
 ##### ################################################################
 USER appl-user
 WORKDIR /home/appl-user/tmp
 
 EXPOSE 8080
 
-CMD ["/home/appl-user/prj/gcp.sbcl.woo/gcp-sbcl-woo"]
+CMD ["/home/appl-user/prj/test.server/src/main"]
