@@ -72,7 +72,7 @@ COPY ./test-server.ros /home/appl-user/prj/gcp.sbcl.woo/test-server.ros
 
 
 ##### ################################################################
-#####   build
+#####   build ros
 ##### ################################################################
 USER appl-user
 WORKDIR /home/appl-user/prj/gcp.sbcl.woo
