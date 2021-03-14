@@ -30,7 +30,7 @@ exec ros -Q -- $0 "$@"
 
 (defun start ()
   (setf *svr*
-        (clack:clackup (lack:builder :session
+        (clack:clackup (lack:builder (:static :path "/public/" :root #P"/static-files/")
                                      (lambda (env)
                                        (declare (ignore env))
                                        '(200 (:content-type "text/plain") ("Hello, Clack!"))))
