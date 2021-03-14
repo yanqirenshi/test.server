@@ -21,6 +21,7 @@ exec ros -Q -- $0 "$@"
 (ql:quickload :test.server)
 
 (defvar *svr* nil)
+(defvar *balus* nil)
 
 (defun start ()
   (setf *svr*
@@ -29,7 +30,8 @@ exec ros -Q -- $0 "$@"
                                      ;; test.server:*router*
                                      (lambda (env)
                                        (declare (ignore env))
-                                       '(200 (:content-type "text/plain") ("Hello, Clack!"))))
+                                       '(200 (:content-type "text/plain")
+                                         ("Hello, Clack!"))))
                        :server  :hunchentoot
                        :port    (parse-integer (or (uiop:getenv "PORT") "8080"))
                        :address "0.0.0.0")))
@@ -37,7 +39,7 @@ exec ros -Q -- $0 "$@"
 (defun gc-loop ()
   (do ((counter 0 (1+ counter))
        (gc-point 88888888))
-      (test.server:*balus* (clack:stop *svr*))
+      (*balus* (clack:stop *svr*))
     (sleep 1)
     (when (= counter gc-point)
       (setf counter 0)
