@@ -3,7 +3,7 @@ steps:
   - name: 'gcr.io/cloud-builders/docker'
     args: [ 'build', '-t', 'gcr.io/test-server-307605/test.server', '.' ]
 
-   - name: 'gcr.io/cloud-builders/docker'
-     args: ['push', 'gcr.io/test-server-307605/test.server']
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', 'gcr.io/test-server-307605/test.server']
 
 timeout: 10m
