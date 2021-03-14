@@ -82,6 +82,14 @@ RUN mkdir -p /home/appl-user/.asdf
 RUN ln -s /home/appl-user/prj/test.server/test.server.asd /home/appl-user/.asdf/test.server.asd
 
 ##### ################################################################
+#####   build exec
+##### ################################################################
+USER appl-user
+WORKDIR /home/appl-user/prj/test.server/src
+
+RUN ros build main.ros
+
+##### ################################################################
 #####   test.server
 ##### ################################################################
 USER appl-user
@@ -89,4 +97,4 @@ WORKDIR /home/appl-user/tmp
 
 EXPOSE 8080
 
-CMD ["/usr/bin/ros", "/home/appl-user/prj/test.server/src/main.ros"]
+CMD ["/home/appl-user/prj/test.server/src/main"]
