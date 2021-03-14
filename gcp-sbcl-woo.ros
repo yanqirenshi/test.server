@@ -33,7 +33,7 @@ exec ros -Q -- $0 "$@"
         (clack:clackup (lack:builder (:static :path "/public/" :root #P"/static-files/")
                                      (lambda (env)
                                        (declare (ignore env))
-                                       '(200 (:content-type "text/plain") ("Hello, Clack!"))))
+                                       '(200 (:content-type "text/plain") ("Hello, Clack!!"))))
                        :server  :woo
                        :port    (parse-integer (or (uiop:getenv "PORT") "8080"))
                        :address "0.0.0.0")))
