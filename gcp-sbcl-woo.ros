@@ -23,10 +23,9 @@ exec ros -Q -- $0 "$@"
 
 
 (ql:quickload :woo)
+(ql:quickload :clack)
 
-
-(defun main (&rest argv)
-  (declare (ignorable argv))
+(defun start ()
   (woo:run
    (lambda (env)
      (declare (ignore env))
@@ -34,5 +33,9 @@ exec ros -Q -- $0 "$@"
    :port (parse-integer (or (uiop:getenv "PORT")
                             "8080"))
    :address "0.0.0.0"))
+
+(defun main (&rest argv)
+  (declare (ignorable argv))
+  (start))
 
 ;;; vim: set ft=lisp lisp:
