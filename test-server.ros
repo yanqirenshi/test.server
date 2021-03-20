@@ -70,7 +70,7 @@ exec ros -Q -- $0 "$@"
 
 (defun build ()
   (lack:builder (:static :path "/files/" :root #P"/home/appl-user/prj/test-server/files/")
-                *mw*
+                ;; *mw*
                 *yy*
                 (lambda (env)
                   (declare (ignore env))
