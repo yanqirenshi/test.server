@@ -57,7 +57,10 @@ WORKDIR /home/appl-user
 
 RUN ros setup
 
+RUN ros install cl-base64
+RUN ros install split-sequence
 RUN ros install woo
+RUN ros install clack
 
 
 ##### ################################################################
