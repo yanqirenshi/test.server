@@ -20,7 +20,7 @@ exec ros -Q -- $0 "$@"
 (ql:quickload :woo)
 (ql:quickload :clack)
 (ql:quickload :test.server)
-;; (ql:quickload :lack-middleware-auth-basic)
+(ql:quickload :lack-middleware-auth-basic)
 
 (defvar *svr* nil)
 
@@ -42,14 +42,24 @@ exec ros -Q -- $0 "$@"
       '(200 (:content-type "text/plain")
         ("Test!")))))
 
+(defvar *xx*
+  (lambda (app)
+    (funcall #'lack.middleware.auth.basic::*lack-middleware-auth-basic*
+             app
+             :authenticator
+             #'(lambda (user pass)
+                 (and (string= user "hoge")
+                      (string= pass "fuga"))))))
+
 (defun build ()
   (lack:builder (:static :path "/files/"
                          :root #P"/home/appl-user/prj/test-server/files/")
                 *mw*
-                (:auth-basic :authenticator
-                             #'(lambda (user pass)
-                                 (and (string= user "hoge")
-                                      (string= pass "fuga"))))
+                *xx*
+                ;; (:auth-basic :authenticator
+                ;;              #'(lambda (user pass)
+                ;;                  (and (string= user "hoge")
+                ;;                       (string= pass "fuga"))))
                 (lambda (env)
                   (declare (ignore env))
                   '(200 (:content-type "text/plain")
