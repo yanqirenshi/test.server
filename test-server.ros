@@ -37,7 +37,9 @@ exec ros -Q -- $0 "$@"
 
 (defvar *mw*
   (lambda (app)
-    (lambda (env) "")))
+    (lambda (env)
+      '(200 (:content-type "text/plain")
+        ("Hello, Clack!")))))
 
 (defun build ()
   (lack:builder (:static :path "/files/"
