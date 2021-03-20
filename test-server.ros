@@ -39,20 +39,20 @@ exec ros -Q -- $0 "$@"
   (lambda (app)
     (lambda (env)
       '(200 (:content-type "text/plain")
-        ("Hello, Clack!")))))
+        ("Test!")))))
 
 (defun build ()
   (lack:builder (:static :path "/files/"
                          :root #P"/home/appl-user/prj/test-server/files/")
                 *mw*
-                (:auth-basic :authenticator
-                             #'(lambda (user pass)
-                                 (and (string= user "hoge")
-                                      (string= pass "fuga"))))
+                ;; (:auth-basic :authenticator
+                ;;              #'(lambda (user pass)
+                ;;                  (and (string= user "hoge")
+                ;;                       (string= pass "fuga"))))
                 (lambda (env)
                   (declare (ignore env))
                   '(200 (:content-type "text/plain")
-                    ("Hello, Clack!")))))
+                    ("Test!")))))
 
 
 (defun start ()
