@@ -27,19 +27,23 @@ exec ros -Q -- $0 "$@"
   (and (string= user "hoge")
        (string= pass "fuga")))
 
+;; (defvar *mw*
+;;   (lambda (app)
+;;     (lambda (env)
+;;       ;; preprocessing
+;;       (let ((res (funcall app env)))
+;;         ;; postprocessing
+;;         res))))
+
 (defvar *mw*
   (lambda (app)
-    (lambda (env)
-      ;; preprocessing
-      (let ((res (funcall app env)))
-        ;; postprocessing
-        res))))
+    (lambda (env) "")))
 
 (defun build ()
   (lack:builder (:static :path "/files/"
                          :root #P"/home/appl-user/prj/test-server/files/")
-                ;; (:auth-basic :authenticator #'basic-auth)
                 *mw*
+                (:auth-basic :authenticator #'basic-auth)
                 (lambda (env)
                   (declare (ignore env))
                   '(200 (:content-type "text/plain")
