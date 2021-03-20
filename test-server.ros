@@ -17,11 +17,11 @@ exec ros -Q -- $0 "$@"
 
 (push #P"~/.asdf/" asdf:*central-registry*)
 
-;; (ql:quickload :woo)
-;; (ql:quickload :clack)
-;; (ql:quickload :test.server)
-;; (ql:quickload :cl-base64)
-;; (ql:quickload :split-sequence)
+(ql:quickload :woo)
+(ql:quickload :clack)
+(ql:quickload :test.server)
+(ql:quickload :cl-base64)
+(ql:quickload :split-sequence)
 
 (defvar *svr* nil)
 
