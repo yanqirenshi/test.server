@@ -4,7 +4,9 @@
   :license ""
   :depends-on (:clack
                :ningle
-               :jonathan)
+               :jonathan
+               :cl-base64
+               :split-sequence)
   :components ((:module "src"
                 :components ((:file "package")
                              (:file "variables")
