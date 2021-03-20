@@ -20,21 +20,10 @@ exec ros -Q -- $0 "$@"
 (ql:quickload :woo)
 (ql:quickload :clack)
 (ql:quickload :test.server)
-(ql:quickload :lack-middleware-auth-basic)
+(ql:quickload :cl-base64)
+(ql:quickload :split-sequence)
 
 (defvar *svr* nil)
-
-(defun basic-auth (user pass)
-  (and (string= user "hoge")
-       (string= pass "fuga")))
-
-;; (defvar *mw*
-;;   (lambda (app)
-;;     (lambda (env)
-;;       ;; preprocessing
-;;       (let ((res (funcall app env)))
-;;         ;; postprocessing
-;;         res))))
 
 (defvar *mw*
   (lambda (app)
@@ -42,30 +31,47 @@ exec ros -Q -- $0 "$@"
       '(200 (:content-type "text/plain")
         ("Test!")))))
 
-;; (defvar *xx*
-;;   (lambda (app)
-;;     (funcall #'lack.middleware.auth.basic::*lack-middleware-auth-basic*
-;;              app
-;;              :authenticator
-;;              #'(lambda (user pass)
-;;                  (and (string= user "hoge")
-;;                       (string= pass "fuga"))))))
+(defun basic-auth (user pass)
+  (and (string= user "hoge")
+       (string= pass "fuga")))
+
+(defun return-401 (realm)
+  `(401
+    (:content-type "text/plain"
+     :content-length 22
+     :www-authenticate ,(format nil "Basic realm=~A" realm))
+    ("Authorization required")))
+
+(defun parse-authorization-header (authorization)
+  (when (string= authorization "Basic " :end1 6)
+    (let ((user-and-pass (cl-base64:base64-string-to-string (subseq authorization 6))))
+      (split-sequence:split-sequence #\: user-and-pass))))
 
 (defvar *yy*
   (lambda (app)
     (lambda (env)
-      '(200 (:content-type "text/plain")
-        ("Test???")))))
+      (block nil
+        (let ((realm "restricted area")
+              (authorization (gethash "authorization" (getf env :headers))))
+          (unless authorization
+            (return (return-401 realm)))
+          (destructuring-bind (user &optional (pass ""))
+              (parse-authorization-header authorization)
+            (if user
+                (multiple-value-bind (result returned-user)
+                    (funcall #'basic-auth user pass)
+                  (if result
+                      (progn
+                        (setf (getf env :remote-user)
+                              (or returned-user user))
+                        (funcall app env))
+                      (return-401 realm)))
+                (return-401 realm))))))))
 
 (defun build ()
-  (lack:builder (:static :path "/files/"
-                         :root #P"/home/appl-user/prj/test-server/files/")
+  (lack:builder (:static :path "/files/" :root #P"/home/appl-user/prj/test-server/files/")
                 *mw*
                 *yy*
-                ;; (:auth-basic :authenticator
-                ;;              #'(lambda (user pass)
-                ;;                  (and (string= user "hoge")
-                ;;                       (string= pass "fuga"))))
                 (lambda (env)
                   (declare (ignore env))
                   '(200 (:content-type "text/plain")
