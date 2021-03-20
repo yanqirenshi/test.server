@@ -23,9 +23,14 @@ exec ros -Q -- $0 "$@"
 
 (defvar *svr* nil)
 
+(defun basic-auth (user pass)
+  (and (string= user "hoge")
+       (string= pass "fuga")))
+
 (defun build ()
   (lack:builder (:static :path "/files/"
                          :root #P"/home/appl-user/prj/test-server/files/")
+                (:auth-basic :authenticator #'basic-auth)
                 (lambda (env)
                   (declare (ignore env))
                   '(200 (:content-type "text/plain")
