@@ -23,9 +23,6 @@ exec ros -Q -- $0 "$@"
 
 (defvar *svr* nil)
 
-(setf test.server:*auth_basic_user* (uiop:getenv "AUTH_BASIC_USER"))
-(setf test.server:*auth_basic_pass* (uiop:getenv "AUTH_BASIC_PASS"))
-
 (defun build ()
   (lack:builder test.server:*middleware-error-case*
                 test.server:*middleware-auth-basic*
@@ -55,6 +52,8 @@ exec ros -Q -- $0 "$@"
 
 (defun main (&rest argv)
   (declare (ignorable argv))
+  ;; (setf test.server:*auth_basic_user* (uiop:getenv "AUTH_BASIC_USER"))
+  ;; (setf test.server:*auth_basic_pass* (uiop:getenv "AUTH_BASIC_PASS"))
   (start)
   (gc-loop))
 
