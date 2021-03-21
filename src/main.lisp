@@ -1,5 +1,8 @@
 (in-package :test.server)
 
+(export *middleware-error-case*)
+(export *middleware-auth-basic*)
+
 (defun ensure-port (port)
   (parse-integer (or port "8080")))
 
@@ -10,17 +13,8 @@
   (and (string= user "hoge")
        (string= pass "fuga")))
 
-(defvar *mw*
-  (lambda (app)
-    (lambda (env)
-      ;; preprocessing
-      (let ((res (funcall app env)))
-        ;; postprocessing
-        res))))
-
 (defun build ()
   (lack:builder :session
-                *mw*
                 (:auth-basic :authenticator #'basic-auth)
                 (:static :path "/public/" :root #P"/static-files/")
                 *router*))
@@ -46,8 +40,19 @@
   (start-server)
   (gc-loop))
 
+
 ;;;;;
+;;;;; *middleware-error-case*
 ;;;;;
+(defvar *middleware-error-case*
+  (lambda (app)
+    (lambda (env)
+      (let ((res (funcall app env)))
+        res))))
+
+
+;;;;;
+;;;;; *middleware-auth-basic*
 ;;;;;
 (defun basic-auth (user pass)
   (and (string= user "hoge")
