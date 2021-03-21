@@ -12,21 +12,8 @@
 (defvar *auth_basic_user* (uiop:getenv "AUTH_BASIC_USER"))
 (defvar *auth_basic_pass* (uiop:getenv "AUTH_BASIC_PASS"))
 
-(defun basic-auth (user pass)
-  (and (string= user *auth_basic_user*)
-       (string= pass *auth_basic_pass*)))
-
-(defvar *mw*
-  (lambda (app)
-    (lambda (env)
-      (format t "~S~%" (getf env ::REQUEST-METHOD))
-      (format t "~S~%" (getf env :PATH-INFO))
-      (let ((res (funcall app env)))
-        res))))
-
 (defun build ()
   (lack:builder :session
-                *mw*
                 (:auth-basic :authenticator #'basic-auth)
                 (:static :path "/public/" :root #P"/static-files/")
                 *router*))
@@ -67,8 +54,8 @@
 ;;;;; *middleware-auth-basic*
 ;;;;;
 (defun basic-auth (user pass)
-  (and (string= user "hoge")
-       (string= pass "fuga")))
+  (and (string= user *auth_basic_user*)
+       (string= pass *auth_basic_pass*)))
 
 (defun return-401 (realm)
   `(401
