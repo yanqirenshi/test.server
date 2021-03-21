@@ -1,7 +1,7 @@
 (in-package :test.server)
 
-(export *middleware-error-case*)
-(export *middleware-auth-basic*)
+(export '*middleware-error-case*)
+(export '*middleware-auth-basic*)
 
 (defun ensure-port (port)
   (parse-integer (or port "8080")))
