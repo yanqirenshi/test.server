@@ -2,43 +2,8 @@
 
 (export '*middleware-error-case*)
 (export '*middleware-auth-basic*)
-
-(defun ensure-port (port)
-  (parse-integer (or port "8080")))
-
-(defun ensure-address (address)
-  (or address "0.0.0.0"))
-
-(defvar *auth_basic_user* (uiop:getenv "AUTH_BASIC_USER"))
-(defvar *auth_basic_pass* (uiop:getenv "AUTH_BASIC_PASS"))
-
-(defun build ()
-  (lack:builder :session
-                (:auth-basic :authenticator #'basic-auth)
-                (:static :path "/public/" :root #P"/static-files/")
-                *router*))
-
-(defun start-server ()
-  (setf *svr*
-        (clack:clackup (build)
-                       :server  :hunchentoot
-                       :port    (ensure-port    (uiop:getenv "PORT"))
-                       :address (ensure-address (uiop:getenv "ADDRESS")))))
-
-(defun gc-loop ()
-  (do ((counter 0 (1+ counter))
-       (gc-point 88888888))
-      (*balus* (clack:stop *svr*))
-    (sleep 1)
-    (when (= counter gc-point)
-      (setf counter 0)
-      (sb-ext:gc))))
-
-
-(defun start ()
-  (start-server)
-  (gc-loop))
-
+(export '*auth_basic_user*)
+(export '*auth_basic_pass*)
 
 ;;;;;
 ;;;;; *middleware-error-case*
@@ -53,6 +18,9 @@
 ;;;;;
 ;;;;; *middleware-auth-basic*
 ;;;;;
+(defvar *auth_basic_user* nil)
+(defvar *auth_basic_pass* nil)
+
 (defun basic-auth (user pass)
   (and (string= user *auth_basic_user*)
        (string= pass *auth_basic_pass*)))
@@ -89,3 +57,39 @@
                         (funcall app env))
                       (return-401 realm)))
                 (return-401 realm))))))))
+
+;;;;;
+;;;;; build & start
+;;;;;
+(defun ensure-port (port)
+  (parse-integer (or port "8080")))
+
+(defun ensure-address (address)
+  (or address "0.0.0.0"))
+
+(defun build ()
+  (lack:builder :session
+                (:auth-basic :authenticator #'basic-auth)
+                (:static :path "/public/" :root #P"/static-files/")
+                *router*))
+
+(defun start-server ()
+  (setf *svr*
+        (clack:clackup (build)
+                       :server  :hunchentoot
+                       :port    (ensure-port    (uiop:getenv "PORT"))
+                       :address (ensure-address (uiop:getenv "ADDRESS")))))
+
+(defun gc-loop ()
+  (do ((counter 0 (1+ counter))
+       (gc-point 88888888))
+      (*balus* (clack:stop *svr*))
+    (sleep 1)
+    (when (= counter gc-point)
+      (setf counter 0)
+      (sb-ext:gc))))
+
+
+(defun start ()
+  (start-server)
+  (gc-loop))
