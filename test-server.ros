@@ -28,11 +28,13 @@ exec ros -Q -- $0 "$@"
                 test.server:*middleware-auth-basic*
                 (:static :path "/files/" :root #P"/home/appl-user/prj/test-server/files/")
                 (lambda (env)
-                  (list 200
-                        (list :content-type "text/plain")
-                        (list (format nil "~a ~a"
-                                      method
-                                      path))))))
+                  (let ((method (getf env ::REQUEST-METHOD))
+                        (path   (getf env :PATH-INFO)))
+                    (list 200
+                          (list :content-type "text/plain")
+                          (list (format nil "~a ~a"
+                                        method
+                                        path)))))))
 
 (defun start ()
   (setf *svr*
