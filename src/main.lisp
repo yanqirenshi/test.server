@@ -13,8 +13,17 @@
   (and (string= user "hoge")
        (string= pass "fuga")))
 
+(defvar *mw*
+  (lambda (app)
+    (lambda (env)
+      (format t "~S~%" (getf env ::REQUEST-METHOD))
+      (format t "~S~%" (getf env :PATH-INFO))
+      (let ((res (funcall app env)))
+        res))))
+
 (defun build ()
   (lack:builder :session
+                *mw*
                 (:auth-basic :authenticator #'basic-auth)
                 (:static :path "/public/" :root #P"/static-files/")
                 *router*))
