@@ -22,8 +22,10 @@
 (defvar *auth_basic_pass* nil)
 
 (defun basic-auth (user pass)
-  (and (string= user (uiop:getenv "AUTH_BASIC_USER"))
-       (string= pass (uiop:getenv "AUTH_BASIC_PASS"))))
+  (and (string= user (or *auth_basic_user*
+                         (setf *auth_basic_user* (uiop:getenv "AUTH_BASIC_USER"))))
+       (string= pass (or *auth_basic_pass*
+                         (setf *auth_basic_pass* (uiop:getenv "AUTH_BASIC_PASS"))))))
 
 (defun return-401 (realm)
   `(401
