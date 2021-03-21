@@ -32,7 +32,11 @@ exec ros -Q -- $0 "$@"
                         (path   (getf env :PATH-INFO)))
                     (list 200
                           (list :content-type "text/plain")
-                          (list (format nil "~a ~a" method path)))))))
+                          (list (format nil "~a ~a~a ~a"
+                                        method
+                                        path
+                                        (uiop:getenv "AUTH_BASIC_USER")
+                                        (uiop:getenv "AUTH_BASIC_PASS"))))))))
 
 (defun start ()
   (setf *svr*
