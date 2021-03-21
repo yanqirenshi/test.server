@@ -30,7 +30,7 @@ exec ros -Q -- $0 "$@"
                 (lambda (env)
                   (list 200
                         (list :content-type "text/plain")
-                        (list (format nil "~a ~a~a ~a"
+                        (list (format nil "~a ~a"
                                       method
                                       path))))))
 
