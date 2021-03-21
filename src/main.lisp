@@ -9,9 +9,12 @@
 (defun ensure-address (address)
   (or address "0.0.0.0"))
 
+(defvar *auth_basic_user* (uiop:getenv "AUTH_BASIC_USER"))
+(defvar *auth_basic_pass* (uiop:getenv "AUTH_BASIC_PASS"))
+
 (defun basic-auth (user pass)
-  (and (string= user "hoge")
-       (string= pass "fuga")))
+  (and (string= user *auth_basic_user*)
+       (string= pass *auth_basic_pass*)))
 
 (defvar *mw*
   (lambda (app)
